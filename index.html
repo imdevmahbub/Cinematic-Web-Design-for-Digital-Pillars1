@@ -1,0 +1,1989 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Pillars — Strategic Growth & Intelligence</title>
+    <meta name="description" content="Digital Pillars is a premium digital marketing and web agency building intelligence-led growth infrastructure for ambitious brands.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        void: '#030305',
+                        graphite: '#0a0a0f',
+                        charcoal: '#12121a',
+                        electric: '#00f0ff',
+                        'electric-dim': 'rgba(0, 240, 255, 0.12)',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --bg-primary: #030305;
+            --bg-secondary: #0a0a0f;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.09);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.62);
+            --accent: #00f0ff;
+            --accent-dim: rgba(0, 240, 255, 0.14);
+            --glass: rgba(10, 10, 15, 0.62);
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Selection */
+        ::selection {
+            background: var(--accent-dim);
+            color: #fff;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+        
+        /* Typography */
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        /* Glass utilities */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+        
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        
+        /* Electric glows */
+        .glow-text {
+            text-shadow: 0 0 40px rgba(0, 240, 255, 0.35);
+        }
+        
+        .glow-border {
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 20px rgba(0, 240, 255, 0.05);
+        }
+        
+        /* Magnetic button */
+        .magnetic-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+        }
+        
+        .magnetic-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,240,255,0.25) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .magnetic-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .magnetic-btn:hover {
+            box-shadow: 0 0 30px rgba(0,240,255,0.3);
+        }
+        
+        /* Cursor tilt */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Hero canvas */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        /* Floating dashboard cards */
+        .dash-card {
+            position: absolute;
+            z-index: 10;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        
+        /* Chart bars */
+        .chart-bar {
+            transition: height 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Service modal */
+        .service-modal {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        .service-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* AI Panel */
+        .ai-panel {
+            transform: translateY(20px) scale(0.96);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+        .ai-panel.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* Testimonial carousel */
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Progress rings */
+        .progress-ring-circle {
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        
+        /* Number counter */
+        .counter-value {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* Hide on reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            #hero-canvas {
+                display: none;
+            }
+            .static-hero {
+                display: block !important;
+            }
+        }
+        
+        /* Mobile-specific */
+        @media (max-width: 768px) {
+            .dash-card {
+                display: none;
+            }
+            .dash-card:nth-child(1), .dash-card:nth-child(2) {
+                display: block;
+            }
+        }
+        
+        /* Grain overlay */
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        
+        /* Gradient mesh */
+        .mesh-glow {
+            background: radial-gradient(ellipse at 50% 50%, rgba(0,240,255,0.08) 0%, transparent 60%);
+        }
+        
+        /* Section reveal base */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        /* Nav link underline */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Process line */
+        .process-line {
+            background: linear-gradient(180deg, var(--accent) 0%, rgba(0,240,255,0) 100%);
+        }
+    </style>
+</head>
+<body class="bg-void text-white">
+    <!-- Grain overlay -->
+    <div class="grain"></div>
+    
+    <!-- Navigation -->
+       <nav id="main-nav"
+     class="fixed top-0 left-0 w-full z-50"
+     style="opacity:1 !important; visibility:visible !important; transform:none !important; translate:none !important; rotate:none !important; scale:none !important; transition:none !important;">
+
+    <div class="glass border-b border-white/5">
+        <div class="w-full px-6 lg:px-12 py-4 flex items-center justify-between">
+
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-8 h-8 rounded-lg bg-electric/10 border border-electric/30 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24" height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         class="w-4 h-4 text-electric">
+                        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+                        <path d="m3.3 7 8.7 5 8.7-5"></path>
+                        <path d="M12 22V12"></path>
+                    </svg>
+                </div>
+                <span class="font-display font-semibold text-lg tracking-tight">
+                    Digital Pillars
+                </span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#services" class="nav-link text-sm text-white hover:text-white transition-colors">Services</a>
+                <a href="#work" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Work</a>
+                <a href="#process" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Process</a>
+                <a href="#testimonials" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Testimonials</a>
+                <a href="#contact" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Contact</a>
+            </div>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="#contact" class="text-sm text-white/70 hover:text-white transition-colors">
+                    Login
+                </a>
+
+                <a href="#contact"
+                   class="magnetic-btn px-5 py-2.5 bg-electric text-void font-medium text-sm rounded-full">
+                    Book a Demo
+                </a>
+            </div>
+
+            <button id="mobile-menu-btn"
+                    class="md:hidden w-10 h-10 flex items-center justify-center rounded-full border border-white/10"
+                    style="opacity:1 !important; visibility:visible !important;">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="w-5 h-5">
+                    <path d="M4 5h16"></path>
+                    <path d="M4 12h16"></path>
+                    <path d="M4 19h16"></path>
+                </svg>
+            </button>
+
+        </div>
+    </div>
+</nav>
+    <!-- <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 opacity-0 -translate-y-full">
+        <div class="glass border-b border-white/5">
+            <div class="w-full px-6 lg:px-12 py-4 flex items-center justify-between">
+                <a href="#hero" class="flex items-center gap-3 group">
+                    <div class="w-8 h-8 rounded-lg bg-electric/10 border border-electric/30 flex items-center justify-center">
+                        <i data-lucide="box" class="w-4 h-4 text-electric"></i>
+                    </div>
+                    <span class="font-display font-semibold text-lg tracking-tight">Digital Pillars</span>
+                </a>
+                
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#services" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Services</a>
+                    <a href="#work" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Work</a>
+                    <a href="#process" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Process</a>
+                    <a href="#testimonials" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Testimonials</a>
+                    <a href="#contact" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Contact</a>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-4">
+                    <a href="#contact" class="text-sm text-white/70 hover:text-white transition-colors">Login</a>
+                    <a href="#contact" class="magnetic-btn px-5 py-2.5 bg-electric text-void font-medium text-sm rounded-full">
+                        Book a Demo
+                    </a>
+                </div>
+                
+                <button id="mobile-menu-btn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full border border-white/10">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </nav> -->
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 z-[60] bg-void/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-12">
+                <span class="font-display font-semibold text-xl">Digital Pillars</span>
+                <button id="mobile-menu-close" class="w-10 h-10 flex items-center justify-center rounded-full border border-white/10">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex flex-col gap-6">
+                <a href="#services" class="mobile-nav-link text-2xl font-display font-light">Services</a>
+                <a href="#work" class="mobile-nav-link text-2xl font-display font-light">Work</a>
+                <a href="#process" class="mobile-nav-link text-2xl font-display font-light">Process</a>
+                <a href="#testimonials" class="mobile-nav-link text-2xl font-display font-light">Testimonials</a>
+                <a href="#contact" class="mobile-nav-link text-2xl font-display font-light">Contact</a>
+            </div>
+            <div class="mt-12">
+                <a href="#contact" class="magnetic-btn w-full py-4 bg-electric text-void font-semibold rounded-full text-center block">
+                    Start a Project
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative w-full min-h-screen overflow-hidden flex items-center">
+        <!-- 3D Canvas -->
+        <canvas id="hero-canvas"></canvas>
+        
+        <!-- Static fallback for reduced motion -->
+        <div class="static-hero hidden absolute inset-0 bg-[url('https://www.designarena.ai/u/2076258b-78c8-4a07-b487-983378e4360d')] bg-cover bg-center opacity-20"></div>
+        
+        <!-- Vignette overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-void/30 via-transparent to-void z-[1] pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-void/60 via-transparent to-void/40 z-[1] pointer-events-none"></div>
+        
+        <!-- Mesh glow behind pillar -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] mesh-glow rounded-full blur-3xl z-[1] pointer-events-none"></div>
+        
+        <!-- Floating Dashboard Cards -->
+        <div id="dash-cards" class="absolute inset-0 z-10 pointer-events-none">
+            <!-- Card 1: Revenue Growth -->
+            <div class="dash-card glass-card rounded-2xl p-5 w-[260px] top-[18%] right-[8%] md:right-[12%]" data-depth="0.15" data-speed="0.4">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs text-white/50 uppercase tracking-widest">Revenue Growth</span>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] border border-emerald-500/20">+32.4%</span>
+                </div>
+                <div class="text-3xl font-display font-light mb-4 counter-value" data-target="14205890">$0</div>
+                <div class="flex items-end gap-1 h-16">
+                    <div class="chart-bar w-3 bg-white/20 rounded-t-sm" style="height: 35%"></div>
+                    <div class="chart-bar w-3 bg-white/20 rounded-t-sm" style="height: 52%"></div>
+                    <div class="chart-bar w-3 bg-white/20 rounded-t-sm" style="height: 44%"></div>
+                    <div class="chart-bar w-3 bg-white/20 rounded-t-sm" style="height: 68%"></div>
+                    <div class="chart-bar w-3 bg-white/20 rounded-t-sm" style="height: 55%"></div>
+                    <div class="chart-bar w-3 bg-electric/60 rounded-t-sm shadow-[0_0_10px_rgba(0,240,255,0.4)]" style="height: 92%"></div>
+                    <div class="chart-bar w-3 bg-white/20 rounded-t-sm" style="height: 76%"></div>
+                    <div class="chart-bar w-3 bg-white/20 rounded-t-sm" style="height: 85%"></div>
+                </div>
+            </div>
+            
+            <!-- Card 2: Campaign Performance -->
+            <div class="dash-card glass-card rounded-2xl p-5 w-[220px] top-[55%] left-[5%] md:left-[10%]" data-depth="0.25" data-speed="0.6">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-full bg-electric/10 flex items-center justify-center">
+                        <i data-lucide="trending-up" class="w-4 h-4 text-electric"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-white/50">Campaign ROI</div>
+                        <div class="text-xl font-display">4.8x</div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-white/50">CTR</span>
+                        <span class="text-electric">3.42%</span>
+                    </div>
+                    <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-electric rounded-full" style="width: 68%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-white/50">Conv.</span>
+                        <span class="text-electric">12.8%</span>
+                    </div>
+                    <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-electric rounded-full" style="width: 52%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3: Active Users -->
+            <div class="dash-card glass-card rounded-2xl p-5 w-[200px] bottom-[15%] right-[12%] md:right-[18%]" data-depth="0.35" data-speed="0.5">
+                <div class="text-xs text-white/50 uppercase tracking-widest mb-3">Active Reach</div>
+                <div class="flex items-center gap-4">
+                    <div class="relative w-16 h-16">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="none"></circle>
+                            <circle class="progress-ring-circle" cx="32" cy="32" r="28" stroke="#00f0ff" stroke-width="4" fill="none" stroke-dasharray="176" stroke-dashoffset="176" data-progress="78"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center text-sm font-display text-electric">78%</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-display counter-value" data-target="2847">0</div>
+                        <div class="text-[10px] text-white/50">K impressions</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4: Platform Mix -->
+            <div class="dash-card glass-card rounded-2xl p-4 w-[180px] top-[30%] left-[8%] md:left-[6%]" data-depth="0.2" data-speed="0.7">
+                <div class="text-xs text-white/50 mb-3">Platform Mix</div>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-electric"></div>
+                        <span class="text-xs">Meta</span>
+                        <span class="text-xs text-white/50 ml-auto">45%</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-white/40"></div>
+                        <span class="text-xs">Google</span>
+                        <span class="text-xs text-white/50 ml-auto">30%</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-white/20"></div>
+                        <span class="text-xs">Programmatic</span>
+                        <span class="text-xs text-white/50 ml-auto">25%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-20 w-full px-6 lg:px-16 xl:px-24 pt-24">
+            <div class="max-w-3xl">
+                <div class="hero-tag inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 mb-8 opacity-0">
+                    <span class="w-2 h-2 rounded-full bg-electric animate-pulse"></span>
+                    <span class="text-xs uppercase tracking-[0.2em] text-white/70">Intelligence-Led Growth</span>
+                </div>
+                
+                <h1 class="hero-headline font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] tracking-tight mb-8">
+                    <span class="block overflow-hidden"><span class="hero-line inline-block opacity-0">Elevate your</span></span>
+                    <span class="block overflow-hidden"><span class="hero-line inline-block opacity-0 text-electric glow-text">digital</span></span>
+                    <span class="block overflow-hidden"><span class="hero-line inline-block opacity-0">infrastructure</span></span>
+                </h1>
+                
+                <p class="hero-subtext text-base md:text-lg text-white/60 max-w-xl leading-relaxed mb-10 opacity-0">
+                    Advanced reasoning systems, predictive media models, and conversion infrastructure built for brands that refuse to compete on average.
+                </p>
+                
+                <div class="hero-ctas flex flex-wrap items-center gap-4 opacity-0">
+                    <a href="#services" class="magnetic-btn group px-8 py-4 bg-electric text-void font-semibold rounded-full text-sm tracking-wide">
+                        Explore Services
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                    <a href="#contact" class="magnetic-btn px-8 py-4 glass text-white font-medium rounded-full text-sm tracking-wide border border-white/15 hover:border-electric/50">
+                        Start a Project
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 opacity-60">
+            <span class="text-[10px] uppercase tracking-[0.2em] text-white/40">Scroll</span>
+            <div class="w-px h-12 bg-gradient-to-b from-white/40 to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="relative w-full py-32 px-6 lg:px-16 xl:px-24 bg-void">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 mb-20">
+                <div class="reveal">
+                    <span class="text-xs uppercase tracking-[0.2em] text-electric mb-4 block">Services</span>
+                    <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-tight">
+                        Four pillars of<br>digital dominance
+                    </h2>
+                </div>
+                <div class="reveal flex items-end">
+                    <p class="text-white/60 text-base md:text-lg leading-relaxed max-w-lg">
+                        Every service is an integrated system. We don't sell tactics—we build compounding growth engines that compound across paid, owned, and earned channels.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Service 1 -->
+                <article class="service-card tilt-card group relative glass-card rounded-3xl p-8 md:p-10 cursor-pointer reveal" data-service="paid-social">
+                    <div class="absolute top-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center transition-all group-hover:bg-electric group-hover:border-electric">
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 transition-colors group-hover:text-void"></i>
+                    </div>
+                    <div class="mb-8">
+                        <span class="text-electric/60 font-display text-sm">01</span>
+                    </div>
+                    <h3 class="font-display text-2xl md:text-3xl font-light mb-4 group-hover:text-electric transition-colors">Paid Social & Meta Campaigns</h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-8 max-w-sm">
+                        Performance creative, audience architecture, and media buying engineered for scale across Meta, TikTok, LinkedIn, and emerging platforms.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Creative Testing</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Media Buying</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60"> Attribution</span>
+                    </div>
+                </article>
+                
+                <!-- Service 2 -->
+                <article class="service-card tilt-card group relative glass-card rounded-3xl p-8 md:p-10 cursor-pointer reveal" data-service="strategy">
+                    <div class="absolute top-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center transition-all group-hover:bg-electric group-hover:border-electric">
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 transition-colors group-hover:text-void"></i>
+                    </div>
+                    <div class="mb-8">
+                        <span class="text-electric/60 font-display text-sm">02</span>
+                    </div>
+                    <h3 class="font-display text-2xl md:text-3xl font-light mb-4 group-hover:text-electric transition-colors">Social Media Strategy</h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-8 max-w-sm">
+                        Narrative systems, content operating models, and community architecture that turn followers into a measurable asset class.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Content Systems</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Community</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Brand Voice</span>
+                    </div>
+                </article>
+                
+                <!-- Service 3 -->
+                <article class="service-card tilt-card group relative glass-card rounded-3xl p-8 md:p-10 cursor-pointer reveal" data-service="web-dev">
+                    <div class="absolute top-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center transition-all group-hover:bg-electric group-hover:border-electric">
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 transition-colors group-hover:text-void"></i>
+                    </div>
+                    <div class="mb-8">
+                        <span class="text-electric/60 font-display text-sm">03</span>
+                    </div>
+                    <h3 class="font-display text-2xl md:text-3xl font-light mb-4 group-hover:text-electric transition-colors">Website Development</h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-8 max-w-sm">
+                        High-performance digital properties built for conversion, speed, accessibility, and editorial expression—without template compromise.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Conversion Design</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Headless CMS</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Performance</span>
+                    </div>
+                </article>
+                
+                <!-- Service 4 -->
+                <article class="service-card tilt-card group relative glass-card rounded-3xl p-8 md:p-10 cursor-pointer reveal" data-service="consulting">
+                    <div class="absolute top-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center transition-all group-hover:bg-electric group-hover:border-electric">
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 transition-colors group-hover:text-void"></i>
+                    </div>
+                    <div class="mb-8">
+                        <span class="text-electric/60 font-display text-sm">04</span>
+                    </div>
+                    <h3 class="font-display text-2xl md:text-3xl font-light mb-4 group-hover:text-electric transition-colors">Digital Consulting</h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-8 max-w-sm">
+                        Executive advisory, tech stack rationalization, and growth diagnostics for leadership teams navigating complex digital transformation.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Audit</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Roadmapping</span>
+                        <span class="px-3 py-1 rounded-full border border-white/10 text-xs text-white/60">Analytics</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Modal -->
+    <div id="service-modal" class="service-modal fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-void/80 backdrop-blur-xl">
+        <div class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass-card rounded-3xl p-8 md:p-12 border border-white/10">
+            <button id="close-service-modal" class="absolute top-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <span id="modal-number" class="text-electric/60 font-display text-sm mb-4 block"></span>
+            <h3 id="modal-title" class="font-display text-3xl md:text-5xl font-light mb-6"></h3>
+            <p id="modal-description" class="text-white/60 text-base md:text-lg leading-relaxed mb-8"></p>
+            <div id="modal-features" class="grid sm:grid-cols-2 gap-4 mb-8"></div>
+            <div class="flex flex-wrap gap-4">
+                <a href="#contact" class="modal-cta magnetic-btn px-6 py-3 bg-electric text-void font-semibold rounded-full text-sm">Start This Engagement</a>
+                <button id="modal-back" class="px-6 py-3 border border-white/15 rounded-full text-sm hover:border-electric/50 transition-colors">Back to Services</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Work / Results Section -->
+    <section id="work" class="relative w-full py-32 px-6 lg:px-16 xl:px-24 bg-graphite overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-void via-transparent to-void pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                <span class="text-xs uppercase tracking-[0.2em] text-electric mb-4 block">Selected Work</span>
+                <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-tight mb-6">
+                    Results that compound
+                </h2>
+                <p class="text-white/60 text-base md:text-lg">
+                    A snapshot of recent growth infrastructure we've built for category-defining brands.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Case 1 -->
+                <div class="case-card group relative glass-card rounded-3xl overflow-hidden reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;">
+    <div class="aspect-[4/3] bg-gradient-to-br from-charcoal to-void relative overflow-hidden">
+
+        <img src="https://cdn.dribbble.com/userupload/13839987/file/original-b1d13f414aad53fe1d3046ee5a75f42a.png?format=webp&resize=400x300&vertical=center"
+             alt="Aurora Beauty"
+             style="width:100%; height:100%; object-fit:cover; object-position:center; display:block;">
+
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-32 rounded-full bg-electric/10 blur-2xl"></div>
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="lucide lucide-bar-chart-3 w-12 h-12 text-electric/40 relative z-10">
+                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                <path d="M18 17V9"></path>
+                <path d="M13 17V5"></path>
+                <path d="M8 17v-3"></path>
+            </svg>
+        </div>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent"></div>
+    </div>
+
+    <div class="p-6">
+        <div class="text-xs text-white/40 uppercase tracking-widest mb-2">E-commerce</div>
+
+        <h3 class="font-display text-xl font-light mb-2">Aurora Beauty</h3>
+
+        <div class="flex items-baseline gap-2 mb-3">
+            <span class="text-3xl font-display text-electric">+214%</span>
+            <span class="text-sm text-white/50">ROAS</span>
+        </div>
+
+        <p class="text-white/50 text-sm leading-relaxed">
+            Rebuilt paid social architecture and landing experience, resulting in 3x conversion rate.
+        </p>
+    </div>
+</div>
+               <!--  <div class="case-card group relative glass-card rounded-3xl overflow-hidden reveal">
+                    <div class="aspect-[4/3] bg-gradient-to-br from-charcoal to-void relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-32 h-32 rounded-full bg-electric/10 blur-2xl"></div>
+                            <i data-lucide="bar-chart-3" class="w-12 h-12 text-electric/40 relative z-10"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-white/40 uppercase tracking-widest mb-2">E-commerce</div>
+                        <h3 class="font-display text-xl font-light mb-2">Aurora Beauty</h3>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-3xl font-display text-electric">+214%</span>
+                            <span class="text-sm text-white/50">ROAS</span>
+                        </div>
+                        <p class="text-white/50 text-sm leading-relaxed">Rebuilt paid social architecture and landing experience, resulting in 3x conversion rate.</p>
+                    </div>
+                </div> -->
+                
+                <!-- Case 2 -->
+                <div class="case-card group relative glass-card rounded-3xl overflow-hidden reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;">
+    <div class="aspect-[4/3] bg-gradient-to-br from-charcoal to-void relative overflow-hidden">
+
+        <img src="https://hackernoon.imgix.net/images/knNSSotgFIQhktVmeXd7erKexlt2-l0a3q9u.jpeg?auto=format%2Ccompress&w=3840"
+             alt="Aurora Beauty"
+             style="width:100%; height:100%; object-fit:cover; object-position:center; display:block;">
+
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-32 rounded-full bg-electric/10 blur-2xl"></div>
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="lucide lucide-bar-chart-3 w-12 h-12 text-electric/40 relative z-10">
+                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                <path d="M18 17V9"></path>
+                <path d="M13 17V5"></path>
+                <path d="M8 17v-3"></path>
+            </svg>
+        </div>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent"></div>
+    </div>
+
+    <div class="p-6">
+        <div class="text-xs text-white/40 uppercase tracking-widest mb-2">SaaS</div>
+                        <h3 class="font-display text-xl font-light mb-2">Nexus Finance</h3>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-3xl font-display text-electric">-41%</span>
+                            <span class="text-sm text-white/50">CAC</span>
+                        </div>
+                        <p class="text-white/50 text-sm leading-relaxed">Integrated attribution model and creative testing framework cut acquisition costs.</p>
+                    </div>
+</div>
+                <!-- <div class="case-card group relative glass-card rounded-3xl overflow-hidden reveal">
+                    <div class="aspect-[4/3] bg-gradient-to-br from-charcoal to-void relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-32 h-32 rounded-full bg-electric/10 blur-2xl"></div>
+                            <i data-lucide="globe" class="w-12 h-12 text-electric/40 relative z-10"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-white/40 uppercase tracking-widest mb-2">SaaS</div>
+                        <h3 class="font-display text-xl font-light mb-2">Nexus Finance</h3>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-3xl font-display text-electric">-41%</span>
+                            <span class="text-sm text-white/50">CAC</span>
+                        </div>
+                        <p class="text-white/50 text-sm leading-relaxed">Integrated attribution model and creative testing framework cut acquisition costs.</p>
+                    </div>
+                </div> -->
+                
+                <!-- Case 3 -->
+                <div class="case-card group relative glass-card rounded-3xl overflow-hidden reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;">
+    <div class="aspect-[4/3] bg-gradient-to-br from-charcoal to-void relative overflow-hidden">
+
+        <img src="https://assets.weforum.org/report/image/responsive_large_SSPTApcqwXjqSrmqcnaQCJa9-DMJEFnJvhUZ3d6YXYk.jpg"
+             alt="Aurora Beauty"
+             style="width:100%; height:100%; object-fit:cover; object-position:center; display:block;">
+
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-32 rounded-full bg-electric/10 blur-2xl"></div>
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="lucide lucide-bar-chart-3 w-12 h-12 text-electric/40 relative z-10">
+                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                <path d="M18 17V9"></path>
+                <path d="M13 17V5"></path>
+                <path d="M8 17v-3"></path>
+            </svg>
+        </div>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent"></div>
+    </div>
+
+    <div class="p-6">
+        <div class="text-xs text-white/40 uppercase tracking-widest mb-2">Consumer</div>
+                        <h3 class="font-display text-xl font-light mb-2">Velocity Active</h3>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-3xl font-display text-electric">+3.2M</span>
+                            <span class="text-sm text-white/50">Reach</span>
+                        </div>
+                        <p class="text-white/50 text-sm leading-relaxed">Social strategy and influencer system drove sustained organic growth.</p>
+                    </div>
+</div>
+                
+               <!--  <div class="case-card group relative glass-card rounded-3xl overflow-hidden reveal">
+                    <div class="aspect-[4/3] bg-gradient-to-br from-charcoal to-void relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-32 h-32 rounded-full bg-electric/10 blur-2xl"></div>
+                            <i data-lucide="share-2" class="w-12 h-12 text-electric/40 relative z-10"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-white/40 uppercase tracking-widest mb-2">Consumer</div>
+                        <h3 class="font-display text-xl font-light mb-2">Velocity Active</h3>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-3xl font-display text-electric">+3.2M</span>
+                            <span class="text-sm text-white/50">Reach</span>
+                        </div>
+                        <p class="text-white/50 text-sm leading-relaxed">Social strategy and influencer system drove sustained organic growth.</p>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="relative w-full py-32 px-6 lg:px-16 xl:px-24 bg-void">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 mb-20">
+                <div class="reveal">
+                    <span class="text-xs uppercase tracking-[0.2em] text-electric mb-4 block">Process</span>
+                    <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-tight">
+                        Built like<br>infrastructure
+                    </h2>
+                </div>
+                <div class="reveal flex items-end">
+                    <p class="text-white/60 text-base md:text-lg leading-relaxed max-w-lg">
+                        A disciplined methodology that turns ambiguity into executable growth systems—fast, measurable, and built to last.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="relative">
+                <div class="absolute left-[19px] top-4 bottom-4 w-px bg-white/10 hidden md:block"></div>
+                <div class="absolute left-[19px] top-4 bottom-4 w-px process-line hidden md:block origin-top scale-y-0" id="process-progress"></div>
+                
+                <div class="space-y-12 md:space-y-0">
+                    <!-- Step 1 -->
+                    <div class="process-step relative md:pl-16 pb-12 reveal">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full border border-white/10 bg-void flex items-center justify-center z-10">
+                            <span class="text-xs text-electric font-display">01</span>
+                        </div>
+                        <div class="glass-card rounded-2xl p-8">
+                            <h3 class="font-display text-2xl font-light mb-3">Diagnose</h3>
+                            <p class="text-white/50 text-sm leading-relaxed max-w-2xl">
+                                We audit your data, creative, funnel, and competitive position to identify the highest-leverage growth constraints.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="process-step relative md:pl-16 pb-12 reveal">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full border border-white/10 bg-void flex items-center justify-center z-10">
+                            <span class="text-xs text-electric font-display">02</span>
+                        </div>
+                        <div class="glass-card rounded-2xl p-8">
+                            <h3 class="font-display text-2xl font-light mb-3">Architect</h3>
+                            <p class="text-white/50 text-sm leading-relaxed max-w-2xl">
+                                We design the integrated system: channel mix, creative pipeline, tech stack, measurement plan, and resource model.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="process-step relative md:pl-16 pb-12 reveal">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full border border-white/10 bg-void flex items-center justify-center z-10">
+                            <span class="text-xs text-electric font-display">03</span>
+                        </div>
+                        <div class="glass-card rounded-2xl p-8">
+                            <h3 class="font-display text-2xl font-light mb-3">Build</h3>
+                            <p class="text-white/50 text-sm leading-relaxed max-w-2xl">
+                                We execute with sprint discipline—launching campaigns, creative, and digital properties in tight feedback loops.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="process-step relative md:pl-16 reveal">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full border border-white/10 bg-void flex items-center justify-center z-10">
+                            <span class="text-xs text-electric font-display">04</span>
+                        </div>
+                        <div class="glass-card rounded-2xl p-8">
+                            <h3 class="font-display text-2xl font-light mb-3">Optimize</h3>
+                            <p class="text-white/50 text-sm leading-relaxed max-w-2xl">
+                                Continuous experimentation, forecasting, and model refinement ensure performance compounds month over month.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="relative w-full py-32 px-6 lg:px-16 xl:px-24 bg-graphite overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 reveal">
+                <div>
+                    <span class="text-xs uppercase tracking-[0.2em] text-electric mb-4 block">Testimonials</span>
+                    <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-tight">
+                        Client conviction
+                    </h2>
+                </div>
+                <div class="flex gap-3 mt-6 md:mt-0">
+                    <button id="test-prev" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <button id="test-next" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="overflow-hidden reveal">
+                <div id="testimonial-track" class="testimonial-track">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-slide w-full md:w-[calc(50%-12px)] flex-shrink-0 mr-6">
+                        <div class="glass-card rounded-3xl p-8 md:p-10 h-full">
+                            <div class="flex gap-1 mb-6">
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                            </div>
+                            <p class="text-white/80 text-lg md:text-xl leading-relaxed mb-8 font-light">
+                                "Digital Pillars replaced three vendors and delivered a single source of truth for our growth. ROAS doubled in 90 days."
+                            </p>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-electric/20 flex items-center justify-center text-electric font-display font-semibold">SM</div>
+                                <div>
+                                    <div class="font-medium text-sm">Sarah Mitchell</div>
+                                    <div class="text-white/40 text-xs">CMO, Aurora Beauty</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-slide w-full md:w-[calc(50%-12px)] flex-shrink-0 mr-6">
+                        <div class="glass-card rounded-3xl p-8 md:p-10 h-full">
+                            <div class="flex gap-1 mb-6">
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                            </div>
+                            <p class="text-white/80 text-lg md:text-xl leading-relaxed mb-8 font-light">
+                                "Their strategic rigor is unmatched. They don't just run campaigns—they build the intelligence layer underneath them."
+                            </p>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-electric/20 flex items-center justify-center text-electric font-display font-semibold">DK</div>
+                                <div>
+                                    <div class="font-medium text-sm">David Kim</div>
+                                    <div class="text-white/40 text-xs">CEO, Nexus Finance</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-slide w-full md:w-[calc(50%-12px)] flex-shrink-0 mr-6">
+                        <div class="glass-card rounded-3xl p-8 md:p-10 h-full">
+                            <div class="flex gap-1 mb-6">
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                                <i data-lucide="star" class="w-4 h-4 text-electric fill-electric"></i>
+                            </div>
+                            <p class="text-white/80 text-lg md:text-xl leading-relaxed mb-8 font-light">
+                                "The website they built became our highest-converting sales channel. Fast, beautiful, and engineered for revenue."
+                            </p>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-electric/20 flex items-center justify-center text-electric font-display font-semibold">ER</div>
+                                <div>
+                                    <div class="font-medium text-sm">Elena Rodriguez</div>
+                                    <div class="text-white/40 text-xs">Founder, Velocity Active</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dots -->
+            <div class="flex justify-center gap-2 mt-8">
+                <button class="test-dot w-2 h-2 rounded-full bg-electric transition-all" data-index="0"></button>
+                <button class="test-dot w-2 h-2 rounded-full bg-white/20 transition-all" data-index="1"></button>
+                <button class="test-dot w-2 h-2 rounded-full bg-white/20 transition-all" data-index="2"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative w-full py-32 px-6 lg:px-16 xl:px-24 bg-void">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16">
+                <div class="reveal">
+                    <span class="text-xs uppercase tracking-[0.2em] text-electric mb-4 block">Contact</span>
+                    <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-tight mb-8">
+                        Start your<br>next pillar
+                    </h2>
+                    <p class="text-white/60 text-base md:text-lg leading-relaxed mb-10 max-w-md">
+                        Tell us where you are and where you're going. We'll respond with a clear growth plan within 48 hours.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full glass flex items-center justify-center">
+                                <i data-lucide="mail" class="w-5 h-5 text-electric"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-white/40 uppercase tracking-wider">Email</div>
+                                <a href="mailto:hello@digitalpillars.io" class="text-white hover:text-electric transition-colors">hello@digitalpillars.io</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full glass flex items-center justify-center">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-electric"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-white/40 uppercase tracking-wider">Studio</div>
+                                <span class="text-white">New York · London · Remote</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reveal">
+                    <form id="contact-form" class="glass-card rounded-3xl p-8 md:p-10">
+                        <div class="grid sm:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-white/40 mb-2">Name</label>
+                                <input type="text" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-electric/50 focus:ring-1 focus:ring-electric/30 transition-all" placeholder="Your name">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-white/40 mb-2">Email</label>
+                                <input type="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-electric/50 focus:ring-1 focus:ring-electric/30 transition-all" placeholder="you@company.com">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-xs uppercase tracking-wider text-white/40 mb-2">Company</label>
+                            <input type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-electric/50 focus:ring-1 focus:ring-electric/30 transition-all" placeholder="Company name">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-xs uppercase tracking-wider text-white/40 mb-2">Project Details</label>
+                            <textarea rows="4" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-electric/50 focus:ring-1 focus:ring-electric/30 transition-all resize-none" placeholder="Tell us about your goals..."></textarea>
+                        </div>
+                        <button type="submit" class="magnetic-btn w-full py-4 bg-electric text-void font-semibold rounded-full text-sm tracking-wide">
+                            Send Message
+                        </button>
+                        <div id="form-success" class="hidden mt-4 text-center text-emerald-400 text-sm">
+                            Message received. We'll be in touch within 48 hours.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full py-12 px-6 lg:px-16 xl:px-24 border-t border-white/5 bg-void">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-electric/10 border border-electric/30 flex items-center justify-center">
+                    <i data-lucide="box" class="w-4 h-4 text-electric"></i>
+                </div>
+                <span class="font-display font-semibold text-lg tracking-tight">Digital Pillars</span>
+            </div>
+            <div class="text-white/40 text-sm">
+                © 2026 Digital Pillars. All rights reserved. Developed by Md. Mahbubur Rahman.
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="text-white/40 hover:text-electric transition-colors">
+                    <i data-lucide="twitter" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="text-white/40 hover:text-electric transition-colors">
+                    <i data-lucide="linkedin" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="text-white/40 hover:text-electric transition-colors">
+                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI Assistant Control -->
+    <div class="fixed bottom-6 right-6 z-[90]">
+        <div id="ai-panel" class="ai-panel absolute bottom-16 right-0 w-[340px] glass-card rounded-2xl p-5 border border-white/10 mb-4 shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-electric/10 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-electric"></i>
+                    </div>
+                    <span class="font-display font-medium text-sm">Digital Pillars AI</span>
+                </div>
+                <button id="ai-close" class="text-white/40 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="space-y-2 mb-4">
+                <button class="ai-question w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-electric/30 transition-all text-sm text-white/80">
+                    What services do you offer?
+                </button>
+                <button class="ai-question w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-electric/30 transition-all text-sm text-white/80">
+                    How do I get started?
+                </button>
+                <button class="ai-question w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-electric/30 transition-all text-sm text-white/80">
+                    What is your typical turnaround?
+                </button>
+            </div>
+            <div id="ai-answer" class="hidden p-4 rounded-xl bg-electric/5 border border-electric/10 text-sm text-white/70 leading-relaxed">
+            </div>
+        </div>
+        
+        <button id="ai-toggle" class="magnetic-btn w-14 h-14 rounded-full bg-electric text-void shadow-[0_0_30px_rgba(0,240,255,0.3)] flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- Coming Soon Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 glass-card rounded-full text-sm text-white/80 opacity-0 pointer-events-none transition-opacity duration-300">
+        Coming soon
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // ============================================
+        // 3D HERO SCENE WITH THREE.JS
+        // ============================================
+        const canvas = document.getElementById('hero-canvas');
+        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        let scene, camera, renderer, pillarGroup, particles, innerCore, rings = [];
+        let mouseX = 0, mouseY = 0;
+        let targetRotationX = 0, targetRotationY = 0;
+        let animationId;
+        let isVisible = true;
+        
+        function initThreeJS() {
+            if (prefersReducedMotion) return;
+            
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x030305, 0.035);
+            
+            const aspect = window.innerWidth / window.innerHeight;
+            camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
+            camera.position.set(0, 0, 8);
+            
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas, 
+                antialias: true, 
+                alpha: true,
+                powerPreference: 'high-performance'
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.15);
+            scene.add(ambientLight);
+            
+            const keyLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+            keyLight.position.set(3, 5, 5);
+            scene.add(keyLight);
+            
+            const rimLight = new THREE.SpotLight(0x00f0ff, 2);
+            rimLight.position.set(-5, 2, -3);
+            rimLight.lookAt(0, 0, 0);
+            scene.add(rimLight);
+            
+            const fillLight = new THREE.PointLight(0xffffff, 0.4);
+            fillLight.position.set(0, -3, 3);
+            scene.add(fillLight);
+            
+            // Pillar Group
+            pillarGroup = new THREE.Group();
+            scene.add(pillarGroup);
+            
+            // Main translucent pillar
+            const pillarGeo = new THREE.BoxGeometry(1.4, 4.2, 1.4, 4, 12, 4);
+            const pillarMat = new THREE.MeshPhysicalMaterial({
+                color: 0x0a0a10,
+                metalness: 0.9,
+                roughness: 0.15,
+                transmission: 0.25,
+                thickness: 2,
+                clearcoat: 1,
+                clearcoatRoughness: 0.1,
+                transparent: true,
+                opacity: 0.92,
+                side: THREE.DoubleSide
+            });
+            const pillar = new THREE.Mesh(pillarGeo, pillarMat);
+            pillarGroup.add(pillar);
+            
+            // Inner glowing core
+            const coreGeo = new THREE.CylinderGeometry(0.35, 0.35, 3.8, 32);
+            const coreMat = new THREE.MeshBasicMaterial({
+                color: 0x00f0ff,
+                transparent: true,
+                opacity: 0.6
+            });
+            innerCore = new THREE.Mesh(coreGeo, coreMat);
+            pillarGroup.add(innerCore);
+            
+            // Core glow
+            const glowGeo = new THREE.CylinderGeometry(0.55, 0.55, 3.9, 32);
+            const glowMat = new THREE.MeshBasicMaterial({
+                color: 0x00f0ff,
+                transparent: true,
+                opacity: 0.12
+            });
+            const coreGlow = new THREE.Mesh(glowGeo, glowMat);
+            pillarGroup.add(coreGlow);
+            
+            // Wireframe cage
+            const cageGeo = new THREE.BoxGeometry(1.8, 4.6, 1.8);
+            const cageMat = new THREE.MeshBasicMaterial({
+                color: 0x00f0ff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.08
+            });
+            const cage = new THREE.Mesh(cageGeo, cageMat);
+            pillarGroup.add(cage);
+            
+            // Floating rings
+            for (let i = 0; i < 4; i++) {
+                const ringGeo = new THREE.TorusGeometry(1.2 + i * 0.25, 0.015, 8, 64);
+                const ringMat = new THREE.MeshBasicMaterial({
+                    color: 0x00f0ff,
+                    transparent: true,
+                    opacity: 0.15 - i * 0.02
+                });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = Math.PI / 2;
+                ring.position.y = -1.8 + i * 1.2;
+                rings.push({ mesh: ring, speed: 0.002 + i * 0.001, offset: i });
+                pillarGroup.add(ring);
+            }
+            
+            // Data strands (vertical glowing lines)
+            const strandGeo = new THREE.BufferGeometry();
+            const strandCount = 40;
+            const positions = new Float32Array(strandCount * 6);
+            for (let i = 0; i < strandCount; i++) {
+                const x = (Math.random() - 0.5) * 1.5;
+                const z = (Math.random() - 0.5) * 1.5;
+                const y1 = -2.2;
+                const y2 = 2.2;
+                positions[i * 6] = x;
+                positions[i * 6 + 1] = y1;
+                positions[i * 6 + 2] = z;
+                positions[i * 6 + 3] = x;
+                positions[i * 6 + 4] = y2;
+                positions[i * 6 + 5] = z;
+            }
+            strandGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const strandMat = new THREE.LineBasicMaterial({
+                color: 0x00f0ff,
+                transparent: true,
+                opacity: 0.12
+            });
+            const strands = new THREE.LineSegments(strandGeo, strandMat);
+            pillarGroup.add(strands);
+            
+            // Particles
+            const particleCount = isTouchDevice ? 200 : 500;
+            const particleGeo = new THREE.BufferGeometry();
+            const particlePositions = new Float32Array(particleCount * 3);
+            const particleSpeeds = [];
+            
+            for (let i = 0; i < particleCount; i++) {
+                particlePositions[i * 3] = (Math.random() - 0.5) * 20;
+                particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+                particleSpeeds.push({
+                    y: Math.random() * 0.005 + 0.002,
+                    x: (Math.random() - 0.5) * 0.003,
+                    z: (Math.random() - 0.5) * 0.003
+                });
+            }
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+            const particleMat = new THREE.PointsMaterial({
+                color: 0x00f0ff,
+                size: 0.035,
+                transparent: true,
+                opacity: 0.5
+            });
+            particles = new THREE.Points(particleGeo, particleMat);
+            particles.userData = { speeds: particleSpeeds };
+            scene.add(particles);
+            
+            // Floor reflection plane
+            const planeGeo = new THREE.PlaneGeometry(30, 30);
+            const planeMat = new THREE.MeshBasicMaterial({
+                color: 0x030305,
+                transparent: true,
+                opacity: 0.8
+            });
+            const floor = new THREE.Mesh(planeGeo, planeMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -3.5;
+            scene.add(floor);
+            
+            // Volumetric light cone
+            const coneGeo = new THREE.ConeGeometry(2, 12, 32, 1, true);
+            const coneMat = new THREE.MeshBasicMaterial({
+                color: 0x00f0ff,
+                transparent: true,
+                opacity: 0.03,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+            const cone = new THREE.Mesh(coneGeo, coneMat);
+            cone.position.y = -3;
+            cone.rotation.x = Math.PI;
+            scene.add(cone);
+            
+            // Animation loop with visibility check
+            document.addEventListener('visibilitychange', () => {
+                isVisible = !document.hidden;
+                if (isVisible) animate();
+            });
+            
+            animate();
+        }
+        
+        function animate() {
+            if (!isVisible || prefersReducedMotion) {
+                animationId = requestAnimationFrame(animate);
+                return;
+            }
+            
+            const time = performance.now() * 0.001;
+            
+            // Smooth rotation based on mouse
+            if (!isTouchDevice) {
+                targetRotationY = mouseX * 0.3;
+                targetRotationX = mouseY * 0.15;
+            }
+            
+            pillarGroup.rotation.y += (targetRotationY - pillarGroup.rotation.y) * 0.05;
+            pillarGroup.rotation.x += (targetRotationX - pillarGroup.rotation.x) * 0.05;
+            
+            // Idle rotation
+            pillarGroup.rotation.y += 0.002;
+            
+            // Inner core pulse
+            innerCore.material.opacity = 0.5 + Math.sin(time * 1.5) * 0.15;
+            innerCore.scale.set(
+                1 + Math.sin(time * 2) * 0.05,
+                1,
+                1 + Math.cos(time * 2) * 0.05
+            );
+            
+            // Animate rings
+            rings.forEach((ring, i) => {
+                ring.mesh.rotation.z += ring.speed;
+                ring.mesh.position.y = -1.8 + i * 1.2 + Math.sin(time + i) * 0.08;
+            });
+            
+            // Animate particles
+            const positions = particles.geometry.attributes.position.array;
+            const speeds = particles.userData.speeds;
+            for (let i = 0; i < speeds.length; i++) {
+                positions[i * 3 + 1] += speeds[i].y;
+                positions[i * 3] += speeds[i].x;
+                positions[i * 3 + 2] += speeds[i].z;
+                
+                if (positions[i * 3 + 1] > 10) positions[i * 3 + 1] = -10;
+                if (positions[i * 3] > 10) positions[i * 3] = -10;
+                if (positions[i * 3] < -10) positions[i * 3] = 10;
+                if (positions[i * 3 + 2] > 5) positions[i * 3 + 2] = -5;
+                if (positions[i * 3 + 2] < -5) positions[i * 3 + 2] = 5;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            particles.rotation.y += 0.0005;
+            
+            renderer.render(scene, camera);
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        window.addEventListener('resize', onWindowResize);
+        
+        // Mouse movement for 3D scene
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+            });
+        }
+        
+        // Initialize 3D
+        initThreeJS();
+        
+        // ============================================
+        // HERO ENTRANCE ANIMATIONS
+        // ============================================
+        const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        
+        heroTl
+            .to('.hero-tag', { opacity: 1, y: 0, duration: 0.8 }, 0.3)
+            .to('.hero-line', { opacity: 1, y: 0, duration: 1, stagger: 0.12 }, 0.5)
+            .to('.hero-subtext', { opacity: 1, y: 0, duration: 0.9 }, 1.1)
+            .to('.hero-ctas', { opacity: 1, y: 0, duration: 0.9 }, 1.3);
+        
+        // Set initial states
+        gsap.set('.hero-tag', { opacity: 0, y: 20 });
+        gsap.set('.hero-line', { opacity: 0, y: 60 });
+        gsap.set('.hero-subtext', { opacity: 0, y: 30 });
+        gsap.set('.hero-ctas', { opacity: 0, y: 30 });
+        
+        // ============================================
+        // NAVIGATION SHOW ON SCROLL
+        // ============================================
+        const nav = document.getElementById('main-nav');
+        ScrollTrigger.create({
+            start: 'top -100',
+            onUpdate: (self) => {
+                if (self.direction === 1 && self.scroll() > 100) {
+                    gsap.to(nav, { opacity: 1, y: 0, duration: 0.3 });
+                } else if (self.scroll() < 100) {
+                    gsap.to(nav, { opacity: 0, y: -100, duration: 0.3 });
+                }
+            }
+        });
+        
+        // Active nav links
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active', 'text-white');
+                link.classList.add('text-white/70');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active', 'text-white');
+                    link.classList.remove('text-white/70');
+                }
+            });
+        });
+        
+        // ============================================
+        // REVEAL ANIMATIONS
+        // ============================================
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach((el, i) => {
+            gsap.set(el, { opacity: 0, y: 30 });
+            ScrollTrigger.create({
+                trigger: el,
+                start: 'top 85%',
+                once: true,
+                onEnter: () => {
+                    gsap.to(el, { 
+                        opacity: 1, 
+                        y: 0, 
+                        duration: 0.8, 
+                        delay: i % 3 * 0.08,
+                        ease: 'power3.out'
+                    });
+                }
+            });
+        });
+        
+        // ============================================
+        // DASHBOARD CARDS PARALLAX
+        // ============================================
+        const dashCards = document.querySelectorAll('.dash-card');
+        
+        if (!isTouchDevice) {
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 2;
+                const y = (e.clientY / window.innerHeight - 0.5) * 2;
+                
+                dashCards.forEach((card, index) => {
+                    const depth = parseFloat(card.dataset.depth) || 0.2;
+                    const speed = parseFloat(card.dataset.speed) || 0.5;
+                    const moveX = x * depth * 40 * speed;
+                    const moveY = y * depth * 30 * speed;
+                    const rotateX = -y * 3 * speed;
+                    const rotateY = x * 3 * speed;
+                    
+                    card.style.transform = `
+                        translate3d(${moveX}px, ${moveY}px, ${depth * 100}px)
+                        rotateX(${rotateX}deg) rotateY(${rotateY}deg)
+                    `;
+                });
+            });
+        }
+        
+        // Counter animation
+        const counters = document.querySelectorAll('.counter-value');
+        counters.forEach(counter => {
+            const target = parseInt(counter.dataset.target);
+            const duration = 2000;
+            const startTime = performance.now();
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(counter, target, duration);
+                        observer.unobserve(counter);
+                    }
+                });
+            });
+            observer.observe(counter);
+        });
+        
+        function animateCounter(el, target, duration) {
+            const start = performance.now();
+            const format = target > 1000000 ? 'M' : target > 1000 ? 'K' : '';
+            
+            function update(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(target * eased);
+                
+                if (target === 14205890) {
+                    el.textContent = '$' + current.toLocaleString();
+                } else if (target === 2847) {
+                    el.textContent = current.toLocaleString();
+                } else {
+                    el.textContent = current.toLocaleString();
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            requestAnimationFrame(update);
+        }
+        
+        // Progress rings
+        const progressRings = document.querySelectorAll('.progress-ring-circle');
+        const ringObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progress = entry.target.dataset.progress;
+                    const circumference = 2 * Math.PI * 28;
+                    const offset = circumference - (progress / 100) * circumference;
+                    entry.target.style.strokeDashoffset = offset;
+                    ringObserver.unobserve(entry.target);
+                }
+            });
+        });
+        progressRings.forEach(ring => ringObserver.observe(ring));
+        
+        // Chart bars animation
+        const chartBars = document.querySelectorAll('.chart-bar');
+        const chartObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    const finalHeight = bar.style.height;
+                    bar.style.height = '0%';
+                    setTimeout(() => {
+                        bar.style.height = finalHeight;
+                    }, 100);
+                    chartObserver.unobserve(bar);
+                }
+            });
+        });
+        chartBars.forEach(bar => chartObserver.observe(bar));
+        
+        // ============================================
+        // CURSOR-REACTIVE CARD TILT
+        // ============================================
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        
+        if (!isTouchDevice) {
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+                    
+                    card.style.transform = `
+                        perspective(1000px)
+                        rotateY(${x * 6}deg)
+                        rotateX(${-y * 6}deg)
+                        translateZ(10px)
+                    `;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0) translateZ(0)';
+                });
+            });
+        }
+        
+        // ============================================
+        // MAGNETIC BUTTONS
+        // ============================================
+        const magneticBtns = document.querySelectorAll('.magnetic-btn');
+        
+        if (!isTouchDevice) {
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    btn.style.setProperty('--mouse-x', `${x}%`);
+                    btn.style.setProperty('--mouse-y', `${y}%`);
+                    
+                    const moveX = (e.clientX - rect.left - rect.width / 2) * 0.2;
+                    const moveY = (e.clientY - rect.top - rect.height / 2) * 0.2;
+                    btn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+                
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate(0, 0)';
+                });
+            });
+        }
+        
+        // ============================================
+        // SERVICES MODAL
+        // ============================================
+        const serviceData = {
+            'paid-social': {
+                number: '01',
+                title: 'Paid Social & Meta Campaigns',
+                description: 'We engineer performance media systems that combine creative intelligence, audience science, and algorithmic buying. From Meta and TikTok to LinkedIn and Pinterest, we design campaigns that scale profitably rather than simply spend more.',
+                features: [
+                    'Creative testing frameworks with rapid iteration cycles',
+                    'Audience architecture and lookalike modeling',
+                    'Media buying with real-time bidding optimization',
+                    'Attribution modeling and incrementality testing',
+                    'Influencer amplification and whitelisting',
+                    'CAPI, server-side tracking, and signal resilience'
+                ]
+            },
+            'strategy': {
+                number: '02',
+                title: 'Social Media Strategy',
+                description: 'Social is no longer a channel—it is the operating system of brand trust. We build narrative systems, content calendars, and community playbooks that transform followers into advocates and content into a compounding asset.',
+                features: [
+                    'Brand narrative and content pillar architecture',
+                    'Platform-native content operating models',
+                    'Community management and engagement protocols',
+                    'Creator and UGC strategy and sourcing',
+                    'Social listening and trend response systems',
+                    'Measurement frameworks tied to business outcomes'
+                ]
+            },
+            'web-dev': {
+                number: '03',
+                title: 'Website Development',
+                description: 'Your website is either your best salesperson or your biggest leak. We design and build high-performance digital properties that prioritize speed, accessibility, conversion, and editorial beauty—without relying on rigid templates.',
+                features: [
+                    'Conversion-centered UX/UI design',
+                    'Headless CMS and custom front-end development',
+                    'Core Web Vitals and performance optimization',
+                    'A/B testing infrastructure and personalization',
+                    'E-commerce, SaaS, and lead-gen implementations',
+                    'Accessibility compliance and SEO fundamentals'
+                ]
+            },
+            'consulting': {
+                number: '04',
+                title: 'Digital Consulting',
+                description: 'For leadership teams navigating complex digital transformation, we provide executive advisory, tech stack audits, and growth diagnostics. We translate ambiguity into a prioritized roadmap with clear milestones and measurable ROI.',
+                features: [
+                    'Comprehensive digital growth audits',
+                    'Marketing technology stack rationalization',
+                    'Data infrastructure and reporting design',
+                    'Team structure and capability planning',
+                    'Board-ready growth forecasts and scenarios',
+                    'Ongoing advisory retainers for leadership'
+                ]
+            }
+        };
+        
+        const serviceModal = document.getElementById('service-modal');
+        const serviceCards = document.querySelectorAll('.service-card');
+        const closeServiceModal = document.getElementById('close-service-modal');
+        const modalBack = document.getElementById('modal-back');
+        
+        serviceCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const key = card.dataset.service;
+                const data = serviceData[key];
+                
+                document.getElementById('modal-number').textContent = data.number;
+                document.getElementById('modal-title').textContent = data.title;
+                document.getElementById('modal-description').textContent = data.description;
+                
+                const featuresContainer = document.getElementById('modal-features');
+                featuresContainer.innerHTML = data.features.map(f => `
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-electric flex-shrink-0 mt-0.5"></i>
+                        <span class="text-sm text-white/70">${f}</span>
+                    </div>
+                `).join('');
+                
+                lucide.createIcons();
+                serviceModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        function closeModal() {
+            serviceModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        closeServiceModal.addEventListener('click', closeModal);
+        modalBack.addEventListener('click', closeModal);
+        serviceModal.addEventListener('click', (e) => {
+            if (e.target === serviceModal) closeModal();
+        });
+        
+        // ============================================
+        // TESTIMONIAL CAROUSEL
+        // ============================================
+        const track = document.getElementById('testimonial-track');
+        const slides = document.querySelectorAll('.testimonial-slide');
+        const prevBtn = document.getElementById('test-prev');
+        const nextBtn = document.getElementById('test-next');
+        const dots = document.querySelectorAll('.test-dot');
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        
+        function updateCarousel() {
+            const slideWidth = slides[0].offsetWidth + 24; // including margin
+            const maxIndex = window.innerWidth >= 768 ? totalSlides - 2 : totalSlides - 1;
+            const index = Math.min(currentSlide, Math.max(0, maxIndex));
+            track.style.transform = `translateX(-${index * slideWidth}px)`;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('bg-electric', i === index);
+                dot.classList.toggle('bg-white/20', i !== index);
+            });
+        }
+        
+        prevBtn.addEventListener('click', () => {
+            currentSlide = Math.max(0, currentSlide - 1);
+            updateCarousel();
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            const maxIndex = window.innerWidth >= 768 ? totalSlides - 2 : totalSlides - 1;
+            currentSlide = Math.min(maxIndex, currentSlide + 1);
+            updateCarousel();
+        });
+        
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                currentSlide = i;
+                updateCarousel();
+            });
+        });
+        
+        window.addEventListener('resize', updateCarousel);
+        
+        // ============================================
+        // AI ASSISTANT
+        // ============================================
+        const aiToggle = document.getElementById('ai-toggle');
+        const aiPanel = document.getElementById('ai-panel');
+        const aiClose = document.getElementById('ai-close');
+        const aiQuestions = document.querySelectorAll('.ai-question');
+        const aiAnswer = document.getElementById('ai-answer');
+        
+        const aiResponses = {
+            'What services do you offer?': 'We offer four integrated services: Paid Social & Meta Campaigns, Social Media Strategy, Website Development, and Digital Consulting. Each is designed to work together as a growth system.',
+            'How do I get started?': 'The best way to start is by booking a discovery call or filling out the contact form. We typically respond within 48 hours with a tailored assessment and proposed next steps.',
+            'What is your typical turnaround?': 'Campaign architecture can launch within 2–3 weeks. Website projects typically range from 6–12 weeks depending on scope. We always align timelines with your commercial priorities.'
+        };
+        
+        aiToggle.addEventListener('click', () => {
+            aiPanel.classList.toggle('active');
+        });
+        
+        aiClose.addEventListener('click', () => {
+            aiPanel.classList.remove('active');
+        });
+        
+        aiQuestions.forEach(q => {
+            q.addEventListener('click', () => {
+                aiAnswer.textContent = aiResponses[q.textContent.trim()];
+                aiAnswer.classList.remove('hidden');
+            });
+        });
+        
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        
+        function openMobileMenu() {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = '';
+        }
+        
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+        
+        // ============================================
+        // CONTACT FORM
+        // ============================================
+        const contactForm = document.getElementById('contact-form');
+        const formSuccess = document.getElementById('form-success');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = contactForm.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = 'Sending...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                formSuccess.classList.remove('hidden');
+                contactForm.reset();
+                
+                setTimeout(() => {
+                    formSuccess.classList.add('hidden');
+                }, 5000);
+            }, 1500);
+        });
+        
+        // ============================================
+        // PROCESS LINE ANIMATION
+        // ============================================
+        const processProgress = document.getElementById('process-progress');
+        if (processProgress) {
+            gsap.to(processProgress, {
+                scaleY: 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#process',
+                    start: 'top 60%',
+                    end: 'bottom 70%',
+                    scrub: true
+                }
+            });
+        }
+        
+        // ============================================
+        // SMOOTH SCROLL FOR ANCHOR LINKS
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        
+        // Toast for placeholder links
+        const toast = document.getElementById('toast');
+        function showToast(message = 'Coming soon') {
+            toast.textContent = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2000);
+        }
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (animationId) cancelAnimationFrame(animationId);
+            ScrollTrigger.getAll().forEach(t => t.kill());
+        });
+    </script>
+</body>
+</html>
